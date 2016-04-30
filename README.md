@@ -81,3 +81,47 @@ In order to receive mail notification (either for the admin and for the users wh
 ```
 @daily echo '{}' | /usr/lib/ckan/default/bin/paster --plugin=ckan post -c /etc/ckan/default/production.ini /api/action_notifications > /dev/null
 ```
+
+## Geojson Preview
+
+In order to enable geojson previews of data with alternate projections, a custom version of the
+[ckanext-geojson](https://github.com/scuerda/ckanext-geoview) needs to be used. Install the extension from GitHub:
+
+
+```
+pip install -e git+http://github.com/scuerda/ckanext-geoview.git@294216059e64818a3153004a1336df5f6e021b32#egg=ckanext_geoview-origin
+```
+
+Add the extension in the configuration file.
+```
+ckan.plugins =  ... projected_geojson_preview
+```
+
+The ability to reproject a geojson that is an projection other than Web Mercator depends on defining a mapping between
+the GeoJSON projection system and the configuration file for the Proj4Leaflet ckanext-geoview plugin. Currently this is done
+within the custom ckanext-geoview plugin in the
+[proj4defs.js](https://github.com/scuerda/ckanext-geoview/blob/custom-proj/ckanext/geoview/public/js/proj4defs.js) file.
+
+The plugin currently only handles one alternate projection. To handle multiple projections the structure of the `proj4defs.js`
+file needs a slight modification:
+
+Change:
+
+```
+proj4.defs("EPSG:26910", "+proj=utm +zone=10 +ellps=GRS80 +datum=NAD83 +units=m +no_defs");
+
+```
+
+to:
+
+```
+proj4.defs([
+  [
+    'EPSG:26910',
+    '"+proj=utm +zone=10 +ellps=GRS80 +datum=NAD83 +units=m +no_defs"'],
+  [
+    'EPSG:4269',
+    '+title=NAD83 (long/lat) +proj=longlat +a=6378137.0 +b=6356752.31414036 +ellps=GRS80 +datum=NAD83 +units=degrees'
+  ]
+]);
+```

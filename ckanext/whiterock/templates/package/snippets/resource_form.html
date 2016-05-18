@@ -1,0 +1,5 @@
+{% ckan_extends %}
+
+{% block basic_fields_url %} {{ super() }}
+
+{{ form.input('direct_download_url', label=_('Direct Download Link'), id='field-direct_download_url', placeholder=_('http://...'), value=data.direct_download_url, error=errors.direct_download_url, classes=['control-medium']) }} {% endblock %}

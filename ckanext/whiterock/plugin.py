@@ -130,6 +130,10 @@ class WhiteRockCommonPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_converter('convert_to_extras')]
                 })
 
+        schema['resources'].update({
+            'direct_download_url': [tk.get_validator('ignore_missing')]
+        })
+
         return schema
 
 
@@ -178,7 +182,9 @@ class WhiteRockCommonPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing')]
             })
 
-
+        schema['resources'].update({
+            'direct_download_url': [tk.get_validator('ignore_missing')]
+        })
 
 
         return schema

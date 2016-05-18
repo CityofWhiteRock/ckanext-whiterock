@@ -9,27 +9,42 @@
   {% set geoformats = ['SHP', 'DWG', 'GEOJSON', 'KML', 'FGDB', 'shp', 'dwg', 'geojson', 'kml', 'fgdb',]%}
       {% block resource_item_explore_links %}
       {% if res.can_be_previewed %}
-      <li>
-        <a href="{{ url }}">
-            <i class="icon-bar-chart"></i>
-            {{ _('Preview') }}
-        </a>
-      </li>
+          <li>
+            <a href="{{ url }}">
+                <i class="icon-bar-chart"></i>
+                {{ _('Preview') }}
+            </a>
+          </li>
       {% endif %}
-      {% if pkg.via_map and res.format in geoformats %} 
-      <li>
-        <a href="{{ pkg.via_map  }}" target="_blank">
-            <i class="icon-download"></i>
-            {{ _('Download via Map') }}
-        </a>
-      </li>   
-      {% endif %}   
-      <li>
-        <a href="{{ res.url }}" class="resource-url-analytics" target="_blank">
+      {% if res.direct_download_url and res.format in geoformats %}
+          <li>
+              <a href="{{ res.direct_download_url }}" target="_blank">
+                  <i class="icon-download"></i>
+                  {{ _('Download') }}
+              </a>
+          </li>
+              <li>
+                  <a href="{{ res.url }} target="_blank" class="resource-url-analytics" target="_blank">
+                      <i class="icon-download"></i>
+                      {{ _('Download via Map') }}
+                  </a>
+              </li>
+      {% else %}
+          <li>
+            <a href="{{ res.url }}" class="resource-url-analytics" target="_blank">
             <i class="icon-download"></i>
             {{ _('Download') }}
-        </a>
+            </a>
       </li>
+      {% endif %}
+{#      {% if pkg.via_map and res.format in geoformats %} #}
+{#      <li>#}
+{#        <a href="{{ pkg.via_map  }}" target="_blank">#}
+{#            <i class="icon-download"></i>#}
+{#            {{ _('Download via Map') }}#}
+{#        </a>#}
+{#      </li>   #}
+{#      {% endif %}#}
       {% if can_edit %}
       <li>
         <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}">
